@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NP - Andrej Stojkovikj</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: monospace;
+      cursor: default;
+    }
+
+    #main {
+      width: 100%;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  
+  <div id="main" class="flex flex-col justify-center items-center border-b-2">
+    <div id="head" class="flex gap-4">
+      <div class="flex flex-col py-2 justify-center">
+        <div class="text-3xl font-semibold">{Napredno Programiranje}</div>
+        <div class="text-md italic leading-none pt-1">
+          A repo for all of my solved coding problems for<br>
+          Advanced Programming at FCSE.<br>
+          <div class="py-1">
+            Written in <span class="text-red-500 font-bold text-[16px]">C</span> with pain and love <span class="not-italic">❤️</span>.
+          </div>
+        </div>
+      </div>
+
+      <div class="h-full w-[2px] bg-neutral-300"></div>
+
+      <div class="flex items-center text-2xl leading-none">
+        Faculty of<br>Computer Science<br>and Engineering<br>
+      </div>
+    </div>
+
+    <div class="text-lg flex gap-6 mt-4">
+      Quick start:
+
+      <div class="flex gap-2">
+        <div class="text-neutral-600">|</div>
+        <a href="Excercises" class="text-neutral-600 hover:text-neutral-800 hover:underline">
+          excercises();
+        </a>
+        <div class="text-neutral-600">|</div>
+        <a href="Labs" class="text-neutral-600 hover:text-neutral-800 hover:underline">
+          labs();
+        </a>
+        <div class="text-neutral-600">|</div>
+        <a href="Exams" class="text-neutral-600 hover:text-neutral-800 hover:underline">
+          exams();
+        </a>
+        <div class="text-neutral-600">|</div>
+      </div>
+    </div>
+
+    <div class="text-lg flex gap-6">
+      Other links:
+
+      <div class="flex gap-2">
+        <div class="text-neutral-600">|</div>
+        <a href="mailto:andrejstojkovikj@yahoo.com" class="text-neutral-600 hover:text-neutral-800 hover:underline">
+          mail();
+        </a>
+        <div class="text-neutral-600">|</div>
+        <a href="https://github.com/AndrejStojkovic" class="text-neutral-600 hover:text-neutral-800 hover:underline">
+          github();
+        </a>
+        <div class="text-neutral-600">|</div>
+        <a href="https://github.com/AndrejStojkovic/SP" class="text-neutral-600 hover:text-neutral-800 hover:underline">
+          repo();
+        </a>
+        <div class="text-neutral-600">|</div>
+      </div>
+    </div>
+
+    <div id="scroll" class="absolute left-1/2 bottom-1 transform -translate-x-1/2 text-lg">
+      You can also just scroll. ↓
+    </div>
+  </div>
+
+  <div id="footer" class="w-full p-4 text-center">
+    Copyright &copy; <span id="year">0000</span> - <a href="https://github.com/AndrejStojkovic" class="hover:text-neutral-700 underline">Andrej Stojkovikj</a>
+  </div>
+
+  <script>
+    document.getElementById('year').innerHTML = new Date().getFullYear();
+  </script>
+</body>
+</html>
