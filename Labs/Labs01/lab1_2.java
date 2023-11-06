@@ -1,3 +1,5 @@
+// Lab 1.2
+
 import java.sql.PreparedStatement;
 import java.util.Scanner;
 import java.util.stream.IntStream;
