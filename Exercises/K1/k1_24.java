@@ -38,6 +38,7 @@ class Risk {
         System.out.println(a);
     }
 }
+
 public class RiskTester {
     public static void main(String[] args) {
         Risk risk = new Risk();

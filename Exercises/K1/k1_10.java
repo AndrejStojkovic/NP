@@ -10,16 +10,18 @@ interface IEvaluator<T> {
 
 class EvaluatorBuilding {
     public static <T extends Comparable<T>> IEvaluator<T> build(String operator) {
-        if(operator == ">")
-            return (a, b) -> a.compareTo(b) > 0;
-        else if(operator == "<")
-            return (a, b) -> a.compareTo(b) < 0;
-        else if(operator == "==")
-            return (a, b) -> a.compareTo(b) == 0;
-        else if(operator == "!=")
-            return (a, b) -> a.compareTo(b) != 0;
-
-        return (a, b) -> false;
+        switch(operator) {
+            case ">":
+                return (a, b) -> a.compareTo(b) > 0;
+            case "==":
+                return (a, b) -> a.compareTo(b) == 0;
+            case "!=":
+                return (a, b) -> a.compareTo(b) != 0;
+            case "<":
+                return (a, b) -> a.compareTo(b) < 0;
+            default:
+                return (a, b) -> false;
+        }
     }
 }
 
