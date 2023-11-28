@@ -112,8 +112,11 @@ class ShoppingCart {
     }
 
     public void blackFridayOffer(List<Integer> discountItems, OutputStream outputStream) throws InvalidOperationException {
-        PrintWriter pw = new PrintWriter(outputStream);
+        if(discountItems.isEmpty()) {
+            throw new InvalidOperationException("There are no products with discount.");
+        }
 
+        PrintWriter pw = new PrintWriter(outputStream);
         ArrayList<Item> discounted = new ArrayList<>();
 
         for(Item item : items) {
@@ -124,14 +127,9 @@ class ShoppingCart {
             }
         }
 
-        if(discounted.isEmpty()) {
-            throw new InvalidOperationException("There are no products with discount.");
-        }
-
         for(Item item : discounted) {
             double original = item.getTotalPrice();
             item.discount();
-//            System.out.println("Original: " + original + ", discounted: " + item.ge);
             pw.println(String.format("%s - %.2f", item.getId(), original - item.getTotalPrice()));
         }
 
