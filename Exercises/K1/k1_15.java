@@ -71,7 +71,7 @@ class Fiskalna {
     }
 
     public void check() throws AmountNotAllowedException {
-        if(getTotalPrice() >= 30000) {
+        if(getTotalPrice() > 30000) {
             throw new AmountNotAllowedException(getTotalPrice());
         }
     }
@@ -83,9 +83,8 @@ class Fiskalna {
     }
 
     public double getTotalTax() {
-        double s = 0;
-        for(Item item : arr) s += item.getTax();
-        return s;
+        // Use mapToDouble because a regular for loop iteration does not work.
+        return arr.stream().mapToDouble(Item::getTax).sum();
     }
 
     @Override
