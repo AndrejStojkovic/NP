@@ -89,11 +89,7 @@ class Quiz {
 
     void printQuiz(OutputStream outputStream) {
         PrintWriter pw = new PrintWriter(outputStream);
-        ArrayList<Question> sorted = questions;
-        sorted.sort(Question::compareTo);
-        for(Question q : sorted) {
-            pw.println(q);
-        }
+        questions.stream().sorted(Question::compareTo).forEach(pw::println);
         pw.flush();
     }
 
@@ -125,7 +121,6 @@ class Quiz {
         }
 
         pw.println(String.format("Total points: %.2f", totalPoints));
-
         pw.flush();
     }
 }

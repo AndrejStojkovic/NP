@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Scanner;
 
 class Canvas {
@@ -25,9 +26,7 @@ class Canvas {
     }
 
     public int getPerimeter() {
-        int s = 0;
-        for(int size : sizes) { s += size; }
-        return s * 4;
+        return sizes.stream().mapToInt(Integer::intValue).sum() * 4;
     }
 
     @Override
@@ -53,7 +52,6 @@ class ShapesApplication {
 
             String canvasId = canvas.split(" ")[0];
             String [] str = canvas.split(" ");
-
             ArrayList<Integer> sizes = new ArrayList<>();
 
             for(int i = 1; i < str.length; i++) {
@@ -68,18 +66,8 @@ class ShapesApplication {
     }
 
     public void printLargestCanvasTo(OutputStream outputStream) {
-        int idx = -1;
-
-        for(int i = 0; i < list.size(); i++) {
-            if(idx == -1 || list.get(i).getPerimeter() > list.get(idx).getPerimeter()) {
-                idx = i;
-            }
-        }
-
-        if(idx == -1) { return; }
-
         PrintWriter print = new PrintWriter(outputStream);
-        print.println(list.get(idx));
+        print.println(list.stream().max(Comparator.comparing(Canvas::getPerimeter)).orElse(null));
         print.flush();
     }
 }
@@ -92,6 +80,5 @@ public class Shapes1Test {
         System.out.println(shapesApplication.readCanvases(System.in));
         System.out.println("===PRINTING LARGEST CANVAS TO OUTPUT STREAM===");
         shapesApplication.printLargestCanvasTo(System.out);
-
     }
 }

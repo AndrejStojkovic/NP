@@ -88,19 +88,11 @@ class Canvas implements Comparable<Canvas> {
     }
 
     public double averageArea() {
-        double sum = 0;
-        for(Shape shape : shapes) {
-            sum += shape.getArea();
-        }
-        return sum / shapes.size();
+        return shapes.stream().mapToDouble(Shape::getArea).average().orElse(0);
     }
 
     public double getTotalArea() {
-        double sum = 0;
-        for(Shape shape : shapes) {
-            sum += shape.getArea();
-        }
-        return sum;
+        return shapes.stream().mapToDouble(Shape::getArea).sum();
     }
 
     public long getSquares() {
@@ -175,14 +167,7 @@ class ShapesApplication {
 
     public void printCanvases(OutputStream outputStream) {
         PrintWriter pw = new PrintWriter(outputStream);
-
-        ArrayList<Canvas> sorted = list;
-        sorted.sort(Collections.reverseOrder());
-
-        for(Canvas c : list) {
-            pw.println(c);
-        }
-
+        list.stream().sorted(Collections.reverseOrder()).forEach(pw::println);
         pw.flush();
     }
 }

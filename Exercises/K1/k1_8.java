@@ -105,24 +105,14 @@ class ArchiveStore {
     }
 
     public void openItem(int id, LocalDate date) throws NonExistingItemException {
-        int idx = -1;
+        Archive archive = archives.stream().filter(x -> x.getId() == id).findFirst().orElse(null);
 
-        for(int i = 0; i < archives.size(); i++) {
-            if(id == archives.get(i).getId()) {
-                idx = i;
-                break;
-            }
-        }
-
-        if(idx == -1) {
+        if(archive == null) {
             throw new NonExistingItemException(id);
         }
 
-        Archive archive = archives.get(idx);
-
         if(archive instanceof LockedArchive) {
             LockedArchive locked = (LockedArchive) archive;
-
             if(date.isBefore(locked.getDateToOpen())) {
                 logs.add("Item " + locked.getId() + " cannot be opened before " + locked.getDateToOpen());
                 return;
@@ -133,7 +123,6 @@ class ArchiveStore {
                 logs.add("Item " + special.getId() + " cannot be opened more than " + special.getMaxOpen() + " times");
                 return;
             }
-
             special.open();
         }
 
@@ -142,9 +131,7 @@ class ArchiveStore {
 
     public String getLog() {
         StringBuilder str = new StringBuilder();
-        for(String log : logs) {
-            str.append(log).append("\n");
-        }
+        logs.forEach(x -> str.append(x).append("\n"));
         return str.toString();
     }
 }

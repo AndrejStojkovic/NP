@@ -78,6 +78,7 @@ class Folder implements IFile {
 
     public void addFile(IFile file) throws FileNameExistsException {
         String fileName = file.getFileName();
+
         for(IFile f : list) {
             if(Objects.equals(fileName, f.getFileName())) {
                 throw new FileNameExistsException(fileName, name);
@@ -103,14 +104,13 @@ class Folder implements IFile {
         StringBuilder str = new StringBuilder();
         str.append(" ".repeat(Math.max(0, 4 * sub)));
         str.append(String.format("Folder name: %10s Folder size: %10d\n", name, size));
-        for(IFile f : list) { str.append(f.getFileInfo(sub + 1)); }
+        list.forEach(x -> str.append(x.getFileInfo(sub + 1)));
         return str.toString();
     }
 
     @Override
     public void sortBySize() {
         list.sort(IFile::compareTo);
-
         for(IFile f : list) {
             f.sortBySize();
         }
@@ -138,7 +138,7 @@ class FileSystem {
     }
 
     public void sortBySize() {
-        dir.sortBySize();;
+        dir.sortBySize();
     }
 
     @Override
@@ -201,9 +201,5 @@ public class FileSystemTest {
 
         System.out.println("===PRINTING THE SIZE OF THE LARGEST FILE IN THE FILE SYSTEM===");
         System.out.println(fileSystem.findLargestFile());
-
-
-
-
     }
 }

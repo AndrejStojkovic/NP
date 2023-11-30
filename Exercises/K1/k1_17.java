@@ -141,16 +141,13 @@ class FrontPage {
                 return list.stream().filter(i -> i.getCategory().getName().equals(category)).collect(Collectors.toList());
             }
         }
-
         throw new CategoryNotFoundException(category);
     }
 
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
-        for(NewsItem item : list) {
-            str.append(item.getTeaser()).append("\n");
-        }
+        list.forEach(x -> str.append(x.getTeaser()).append("\n"));
         return str.toString();
     }
 }

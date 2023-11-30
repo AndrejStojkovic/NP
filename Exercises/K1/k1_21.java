@@ -142,14 +142,10 @@ class F1Race {
 
     void printSorted(OutputStream outputStream) {
         PrintWriter pw = new PrintWriter(outputStream);
-
-        ArrayList<Lap> sorted = laps;
-        sorted.sort(Lap::compareTo);
-
+        laps.sort(Lap::compareTo);
         for(int i = 0; i < laps.size(); i++) {
             pw.println(String.format("%d. %s", (i + 1), laps.get(i)));
         }
-
         pw.flush();
     }
 }

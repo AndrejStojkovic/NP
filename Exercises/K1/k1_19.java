@@ -173,7 +173,7 @@ class Subtitles {
     }
 
     public void shift(int ms) {
-        for(Subtitle s : arr) s.shift(ms);
+        arr.forEach(x -> x.shift(ms));
     }
 }
 

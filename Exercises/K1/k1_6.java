@@ -44,7 +44,9 @@ class Shape implements Scalable, Stackable {
     public void scale(float scaleFactor) { }
 
     @Override
-    public float weight() { return 0; }
+    public float weight() {
+        return 0;
+    }
 }
 
 class Circle extends Shape {
@@ -158,7 +160,7 @@ class Canvas {
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
-        for(Shape s : shapes) { str.append(s).append("\n"); }
+        shapes.forEach(x -> str.append(x).append("\n"));
         return str.toString();
     }
 }

@@ -53,9 +53,7 @@ class Component implements Comparable<Component> {
     public String format(String lines) {
         StringBuilder str = new StringBuilder();
         str.append(String.format("%s%d:%s\n", lines, weight, color));
-        for(Component c : components) {
-            str.append(c.format(lines + "---"));
-        }
+        components.forEach(x -> str.append(x.format(lines + "---")));
         return str.toString();
     }
 
@@ -71,11 +69,7 @@ class Component implements Comparable<Component> {
     public String toString() {
         StringBuilder str = new StringBuilder();
         str.append(String.format("%d:%s\n", weight, color));
-        int idx = 0;
-        for(Component c : components) {
-            str.append(c.format("---"));
-            idx++;
-        }
+        components.forEach(x -> str.append(x.format("---")));
         return str.toString();
     }
 }

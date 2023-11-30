@@ -97,12 +97,7 @@ class TimeTable {
 
     public void writeTimes(OutputStream outputStream, TimeFormat format) {
         PrintWriter pw = new PrintWriter(outputStream);
-
-        times.sort(Time::compareTo);
-        for(Time t : times) {
-            pw.println(t.getTime(format));
-        }
-
+        times.stream().sorted(Time::compareTo).forEach(x -> pw.println(x.getTime(format)));
         pw.flush();
     }
 }

@@ -105,9 +105,7 @@ class ShoppingCart {
 
     public void printShoppingCart(OutputStream outputStream) {
         PrintWriter pw = new PrintWriter(outputStream);
-        ArrayList<Item> sorted = items;
-        sorted.sort(Item::compareTo);
-        for(Item item : sorted) pw.println(item);
+        items.stream().sorted(Item::compareTo).forEach(pw::println);
         pw.flush();
     }
 

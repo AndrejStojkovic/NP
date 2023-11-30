@@ -77,13 +77,10 @@ class Fiskalna {
     }
 
     public int getTotalPrice() {
-        int s = 0;
-        for(Item item : arr) s += item.getPrice();
-        return s;
+        return arr.stream().mapToInt(Item::getPrice).sum();
     }
 
     public double getTotalTax() {
-        // Use mapToDouble because a regular for loop iteration does not work.
         return arr.stream().mapToDouble(Item::getTax).sum();
     }
 
@@ -127,7 +124,7 @@ class MojDDV {
 
     public void printTaxReturns(OutputStream out) {
         PrintWriter pw = new PrintWriter(out);
-        for(Fiskalna f : list) pw.println(f);
+        list.forEach(pw::println);
         pw.flush();
     }
 }

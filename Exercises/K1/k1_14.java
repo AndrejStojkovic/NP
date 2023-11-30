@@ -78,7 +78,6 @@ class WeatherStation {
 
     public void addMeasurment(float temperature, float wind, float humidity, float visibility, Date date) {
         WeatherDay w = new WeatherDay(temperature, wind, humidity, visibility, date);
-//        list.removeIf(x -> x.date.minusDays(n).isAfter(date));
 
         if(list.isEmpty()) {
             list.add(w);
@@ -133,9 +132,7 @@ class WeatherStation {
         }
 
         StringBuilder str = new StringBuilder();
-        for(WeatherDay i : arr) {
-            str.append(i).append("\n");
-        }
+        arr.forEach(x -> str.append(x).append("\n"));
         System.out.print(str.toString());
         System.out.printf("Average temperature: %.2f\n", avg / ct);
     }

@@ -126,7 +126,7 @@ class MojDDV {
 
     public void printTaxReturns(OutputStream out) {
         PrintWriter pw = new PrintWriter(out);
-        for(Fiskalna f : list) pw.println(f);
+        list.forEach(pw::println);
         pw.flush();
     }
 
@@ -134,7 +134,6 @@ class MojDDV {
         PrintWriter pw = new PrintWriter(out);
 
         DoubleSummaryStatistics summary = list.stream().mapToDouble(Fiskalna::getTotalTax).summaryStatistics();
-
         pw.println(String.format("min:\t%.3f", summary.getMin()));
         pw.println(String.format("max:\t%.3f", summary.getMax()));
         pw.println(String.format("sum:\t%.3f", summary.getSum()));
