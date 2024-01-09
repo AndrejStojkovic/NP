@@ -2,21 +2,14 @@
 
 import java.util.*;
 
-interface IOrder {
-    double total();
-    double avg();
-}
-
-class Restaurant implements IOrder {
+class Base  {
     String id;
     String name;
-    Location location;
     List<Float> orders;
 
-    Restaurant(String id, String name, Location location) {
+    Base(String id, String name) {
         this.id = id;
         this.name = name;
-        this.location = location;
         this.orders = new ArrayList<>();
     }
 
@@ -24,108 +17,91 @@ class Restaurant implements IOrder {
         return id;
     }
 
+    public int getOrders() {
+        return orders.size();
+    }
+
     public void addOrder(float cost) {
         orders.add(cost);
     }
 
-    @Override
     public double total() {
         return orders.stream().mapToDouble(x -> x).sum();
     }
 
-    @Override
     public double avg() {
         return orders.stream().mapToDouble(x -> x).average().orElse(0);
     }
 
+    public String format(String a, String b) {
+        return String.format(" Total %s: %d Total %s: %.2f Average %s: %.2f", a, orders.size(), b, total(), b, avg());
+    }
+
     @Override
     public String toString() {
-        String fees = String.format("Total amount earned: %.2f Average amount earned: %.2f", total(), avg());
-        return String.format("ID: %s Name: %s Total orders: %d %s", id, name, orders.size(), fees);
+        return String.format("ID: %s Name: %s", id, name);
     }
 }
 
-class User implements IOrder {
-    String id;
-    String name;
+class Restaurant extends Base {
+    Location location;
+
+    Restaurant(String id, String name, Location location) {
+        super(id, name);
+        this.location = location;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + format("orders", "amount earned");
+    }
+}
+
+class User extends Base {
     Map<String, Location> locations;
-    List<Float> orders;
 
     User(String id, String name) {
-        this.id = id;
-        this.name = name;
+        super(id, name);
         this.locations = new HashMap<>();
-        this.orders = new ArrayList<>();
     }
 
     public void addAddress(String addressName, Location location) {
         locations.put(addressName, location);
     }
 
-    public String getId() {
-        return id;
-    }
-
     public Location getLocation(String address) {
         return locations.get(address);
     }
 
-    public void addOrder(float cost) {
-        orders.add(cost);
-    }
-
-    @Override
-    public double total() {
-        return orders.stream().mapToDouble(x -> x).sum();
-    }
-
-    @Override
-    public double avg() {
-        return orders.stream().mapToDouble(x -> x).average().orElse(0);
-    }
-
     @Override
     public String toString() {
-        String fees = String.format("Total amount spent: %.2f Average amount spent: %.2f", total(), avg());
-        return String.format("ID: %s Name: %s Total orders: %d %s", id, name, orders.size(), fees);
+        return super.toString() + format("orders", "amount spent");
     }
 }
 
-class DeliveryPerson implements IOrder {
-    String id;
-    String name;
+class DeliveryPerson extends Base {
     Location currentLocation;
-    List<Float> orders;
 
     DeliveryPerson(String id, String name, Location currentLocation) {
-        this.id = id;
-        this.name = name;
+        super(id, name);
         this.currentLocation = currentLocation;
-        this.orders = new ArrayList<>();
     }
 
-    public String getId() {
-        return id;
+    public void setCurrentLocation(Location newLocation) {
+        currentLocation = newLocation;
     }
 
-    public void addOrder(float cost) {
-        orders.add(cost);
-    }
-
-    @Override
-    public double total() {
-        return orders.stream().mapToDouble(x -> x).sum();
-    }
-
-    @Override
-    public double avg() {
-        return orders.stream().mapToDouble(x -> x).average().orElse(0);
+    public int distanceValue(Location other) {
+        return (currentLocation.distance(other) / 10) * 10;
     }
 
     @Override
     public String toString() {
-        String fees = String.format("Total delivery fee: %.2f Average delivery fee: %.2f", total(), avg());
-        return String.format("ID: %s Name: %s Total deliveries: %d %s", id, name, orders.size(), fees);
+        return super.toString() + format("deliveries", "delivery fee");
     }
 }
 
@@ -163,8 +139,19 @@ class DeliveryApp {
 
     public void orderFood(String userId, String userAddressName, String restaurantId, float cost) {
         users.get(userId).addOrder(cost);
-        restaurants.get(restaurantId).addOrder(cost);
+        Restaurant restaurant = restaurants.get(restaurantId);
+        restaurant.addOrder(cost);
         Location location = users.get(userId).getLocation(userAddressName);
+
+        DeliveryPerson person = deliveryPeople.values().stream()
+                .min(Comparator.comparing((DeliveryPerson x) -> x.currentLocation.distance(restaurant.getLocation()))
+                .thenComparing(Base::getOrders)
+                .thenComparing(Base::getId)).orElse(null);
+
+        if(person != null) {
+            person.addOrder(90 + person.distanceValue(restaurant.getLocation()));
+            person.setCurrentLocation(location);
+        }
     }
 
     public void printUsers() {
@@ -175,7 +162,7 @@ class DeliveryApp {
 
     public void printRestaurants() {
         restaurants.values().stream()
-                .sorted(Comparator.comparing(Restaurant::total).thenComparing(Restaurant::getId).reversed())
+                .sorted(Comparator.comparing(Restaurant::avg).thenComparing(Restaurant::getId).reversed())
                 .forEach(System.out::println);
     }
 
@@ -185,10 +172,6 @@ class DeliveryApp {
                 .forEach(System.out::println);
     }
 }
-
-/*
-DO NOT MODIFY THE interfaces and classes below!!!
-*/
 
 interface Location {
     int getX();
