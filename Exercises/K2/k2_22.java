@@ -1,9 +1,11 @@
-// K2 22 (In progress)
+// K2 22
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 class WrongDateException extends Exception {
     WrongDateException(Date date) {
@@ -22,13 +24,16 @@ class Event implements Comparable<Event> {
         this.date = date;
     }
 
+    public int getMonth() {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        return c.get(Calendar.MONTH);
+    }
+
     @Override
     public int compareTo(Event o) {
         int d = date.compareTo(o.date);
-        if(d == 0) {
-            return name.compareTo(o.name);
-        }
-        return d;
+        return d != 0 ? d : name.compareTo(o.name);
     }
 
     @Override
@@ -57,13 +62,29 @@ class EventCalendar {
     }
 
     public void listEvents(Date date) {
-        events.stream().filter(x -> x.date.equals(date))
-                .sorted()
-                .forEach(System.out::println);
+        List<Event> filtered = events.stream().filter(x -> compareDates(x.date, date)).collect(Collectors.toList());
+        if(filtered.isEmpty()) {
+            System.out.println("No events on this day!");
+            return;
+        }
+        filtered.forEach(System.out::println);
     }
 
     public void listByMonth() {
-        events.stream().sorted().forEach(System.out::println);
+        IntStream.range(0, 12).forEach(i -> {
+                long count = events.stream().filter(x -> x.getMonth() == i).count();
+                System.out.printf("%d : %d%n", (i + 1), count);
+            });
+    }
+
+    public boolean compareDates(Date date1, Date date2) {
+        Calendar a = Calendar.getInstance(), b = Calendar.getInstance();
+        a.setTime(date1);
+        b.setTime(date2);
+
+        return a.get(Calendar.DAY_OF_MONTH) == b.get(Calendar.DAY_OF_MONTH) &&
+                a.get(Calendar.MONTH) == b.get(Calendar.MONTH) &&
+                a.get(Calendar.YEAR) == b.get(Calendar.YEAR);
     }
 }
 
