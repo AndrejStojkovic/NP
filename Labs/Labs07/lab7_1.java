@@ -1,5 +1,7 @@
 // Lab 7.1
 
+import com.sun.source.tree.Tree;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -20,16 +22,16 @@ class NoSuchUserException extends Exception {
 
 class ChatRoom implements Comparable<ChatRoom> {
     String name;
-    Set<String> users;
+    TreeSet<String> users;
 
     ChatRoom() {
         name = "ChatRoom";
-        users = new HashSet<>();
+        users = new TreeSet<>();
     }
 
     ChatRoom(String name) {
         this.name = name;
-        users = new HashSet<>();
+        users = new TreeSet<>();
     }
 
     public void addUser(String username) {
@@ -59,9 +61,7 @@ class ChatRoom implements Comparable<ChatRoom> {
         if(users.isEmpty()) {
             str.append("EMPTY").append("\n");
         } else {
-            ArrayList<String> sorted = new ArrayList<>(users);
-            sorted.sort(String::compareTo);
-            sorted.forEach(x -> str.append(x).append("\n"));
+            users.forEach(x -> str.append(x).append("\n"));
         }
         return str.toString();
     }
@@ -103,7 +103,8 @@ class ChatSystem {
 
     public void register(String username) {
         registeredUsers.add(username);
-        rooms.values().stream().min(Comparator.comparingInt(ChatRoom::numUsers).
+        rooms.values().stream()
+                .min(Comparator.comparingInt(ChatRoom::numUsers).
                 thenComparing(ChatRoom::getName)).ifPresent(x -> x.addUser(username));
     }
 
@@ -112,7 +113,8 @@ class ChatSystem {
     }
 
     public void registerAndJoin(String username, String roomName) {
-        register(username);
+        registeredUsers.add(username);
+
         try {
             ChatRoom room = getRoom(roomName);
             room.addUser(username);
