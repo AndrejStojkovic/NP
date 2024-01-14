@@ -1,4 +1,4 @@
-// Lab 8.2 (Sort of working, too lazy to fix the formatting)
+// Lab 8.2
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,7 +15,7 @@ class XML implements XMLComponent {
 
     XML(String tag) {
         this.tag = tag;
-        this.attributes = new HashMap<>();
+        this.attributes = new TreeMap<>(Comparator.reverseOrder());
     }
 
     @Override
@@ -45,12 +45,13 @@ class XMLComposite extends XML {
     public String getType() {
         return "COMPOSITE";
     }
+
     String toStringRecursive(XMLComposite xml, int level) {
         StringBuilder str = new StringBuilder();
 
-        str.append("\t".repeat(Math.max(0, level)));
+        str.append("\t".repeat(level));
 
-        str.append("<").append(tag);
+        str.append("<").append(xml.tag);
         if(!xml.attributes.isEmpty()) {
             str.append(" ").append(xml.attributes.entrySet().stream().sorted().map(x ->
                     String.format("%s=\"%s\"", x.getKey(), x.getValue())).collect(Collectors.joining(" ")));
@@ -59,15 +60,14 @@ class XMLComposite extends XML {
 
         for (XMLComponent component : xml.components) {
             if (component.getType().equals("LEAF")) {
-                str.append("\t".repeat(Math.max(0, level)));
-                str.append(component).append("\n");
+                str.append("\t".repeat(level + 1)).append(component).append("\n");
             } else if (component.getType().equals("COMPOSITE")) {
                 str.append(toStringRecursive((XMLComposite) component, level + 1)).append("\n");
             }
         }
 
-        str.append("\t".repeat(Math.max(0, level)));
-        str.append("</").append(tag).append(">");
+        str.append("\t".repeat(level));
+        str.append("</").append(xml.tag).append(">");
         return str.toString();
     }
 

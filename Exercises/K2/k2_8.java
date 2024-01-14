@@ -1,10 +1,8 @@
 // K2 8
 
-import java.awt.*;
 import java.io.*;
 import java.util.*;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 class InvalidIDException extends Exception {
@@ -19,15 +17,10 @@ class InvalidDimensionException extends Exception {
     }
 }
 
-interface IShape extends Comparable<IShape> {
+interface IShape {
     double getPerimeter();
     double getArea();
     void scale(double coef);
-
-    @Override
-    default int compareTo(IShape o) {
-        return Double.compare(getArea(), o.getArea());
-    }
 }
 
 class Circle implements IShape {
