@@ -1,9 +1,10 @@
-// K2 26 (Distribution needs to be done)
+// K2 26
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.stream.IntStream;
 
 class Student implements Comparable<Student> {
     String id;
@@ -16,16 +17,12 @@ class Student implements Comparable<Student> {
         this.grades = grades;
     }
 
+    public List<Integer> getAllGrades() {
+        return grades;
+    }
+
     public double avg() {
         return grades.stream().mapToDouble(x -> x).average().orElse(0);
-    }
-
-    public long count(int grade) {
-        return grades.stream().filter(x -> x == grade).count();
-    }
-
-    public int sortByGrade(Student o) {
-        return Long.compare(o.count(10), count(10));
     }
 
     @Override
@@ -49,23 +46,17 @@ class StudentRecords {
 
     public int readRecords(InputStream inputStream) {
         Scanner scanner = new Scanner(inputStream);
-
         int ct = 0;
+
         while(scanner.hasNextLine()) {
             String [] line = scanner.nextLine().split(" ");
             List<Integer> grades = new ArrayList<>();
-
-            for(int i = 2; i < line.length; i++) {
-                grades.add(Integer.parseInt(line[i]));
-            }
-
+            IntStream.range(2, line.length).forEach(i -> grades.add(Integer.parseInt(line[i])));
             Student student = new Student(line[0], line[1], grades);
             students.computeIfAbsent(line[1], x -> new HashSet<>());
             students.computeIfPresent(line[1], (k, v) -> { v.add(student); return v; });
-
             ct++;
         }
-
         return ct;
     }
 
@@ -80,8 +71,26 @@ class StudentRecords {
 
     public void writeDistribution(OutputStream outputStream) {
         PrintWriter pw = new PrintWriter(outputStream);
-        // TO-DO
+
+        students.entrySet().stream()
+                .sorted(Comparator.comparing(x -> -getGrades(x.getKey(), 10)))
+                .forEach(x -> {
+                    System.out.println(x.getKey());
+                    IntStream.range(6, 11).forEach(i -> {
+                        int ct = (int)getGrades(x.getKey(), i);
+                        System.out.printf("%2d | %s(%d)\n", i, "*".repeat((int)Math.ceil((double)ct / 10)), ct);
+                    });
+                });
+
+
         pw.flush();
+    }
+
+    private long getGrades(String k, int n) {
+        return students.get(k).stream()
+                .map(Student::getAllGrades)
+                .flatMap(Collection::stream)
+                .filter(grade -> grade == n).count();
     }
 }
 
